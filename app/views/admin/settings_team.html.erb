@@ -1,0 +1,17 @@
+<div class="row">
+  <h1>Team<span class="team-info"><%= @team.size %> Member(s)</span></h1>
+  <p class="label">MANAGE AND INVITE YOUR TEAM MEMBERS</p>
+  <div class="team">
+    <div class="set">
+      <% @team.each do |user| %>
+        <div class="info">
+          <%= image_tag user.profile_pic || 'noimage.png' %>
+          <span><%= user.first_name %> <%= user.last_name %></span>
+        </div>
+        <div class="manage">
+          <p class="joined">joined <%= time_ago_in_words(user.created_at) %> ago</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Greet | Dashboard</title>
+    <%= csrf_meta_tags %>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <%= stylesheet_link_tag 'admin', 'data-turbolinks-track': 'reload' %>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <%= stylesheet_link_tag 'admin/'+ params[:action] %>
+
+    <%= javascript_include_tag 'admin', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'admin/'+ params[:action], 'data-turbolinks-track': 'reload' %>
+    <%= favicon_link_tag 'logo-2-p-v2.png' %>
+  </head>
+
+  <body>
+    <nav>
+      <div class="row nav top-nav">
+        <div class="logo">
+          <a href="/"><%= image_tag @current_company.logo_url ? @current_company.logo_url : "logo-2-p-v2.png" %></a>
+        </div>
+        <div class="log_out">
+          <%= link_to "Sign Out", sign_out_path %>
+        </div>
+      </div>
+      <div class="row nav middle-nav">
+        <div class="page-selected" data-page-id=""></div>
+        <ul class="page-widget">
+          <% Array(@pages).each do |page| %>
+            <li class="page">
+              <input type="hidden" value="<%= page.page_id %>">
+              <input type="hidden" id="page-id" value="<%= page.id %>">
+              <img src="<%= page.picture %>" onerror="imgError(this);">
+              <span><%= page.name %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="row nav bottom-nav">
+        <ul class="list">
+          <li class="<%= 'active' if current_page?(admin_path) %>">
+            <a href="/admin">Insights</a>
+            <% if current_page?(admin_path) %>
+              <ul class="sub platform-menu">
+                <li class="active" data-platform="all">All</li>
+                <li data-platform="facebook">Facebook</li>
+                <li data-platform="instagram">Instagram</li>
+              </ul>
+            <% end %>
+          </li>
+
+          <li class="<%= 'active' if current_page?(admin_posts_path) %>">
+            <a href="/admin/posts">Posts</a>
+          </li>
+
+          <% unless current_user.has_role?(:sub_free) || current_user.has_role?(:sub_basic) %>
+            <li class="<%= 'active' if current_page?(admin_campaign_path) %>">
+              <a href="/admin/campaign">Campaign</a>
+            </li>
+
+            <% if ["post", "stats"].include?(params[:action]) %>
+              <li class="tag-search-btn"><i class="fas fa-search"></i><a href="#" id="tag-btn">Search Tags</a></li>
+            <% end %>
+          <% end %>
+
+          <li class="<%= 'active' if current_page?(admin_settings_path) || current_page?(admin_settings_pages_path) || current_page?(admin_settings_team_path) %>">
+            <a href="/admin/settings">Settings</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="main row <%= params[:action] %>">
+      <%= yield %>
+    </div>
+
+    <div class="loader">
+      <%= image_tag "loading_dots.gif" %>
+    </div>
+
+    <% unless params[:action] == "settings" %>
+      <div class="tag-search">
+        <div class="tag-header">
+          <i class="fas fa-times close-search"></i>
+          <div class="logo">
+            <a href="/"><%= image_tag "logo-2-p-v2.png" %></a>
+          </div>
+          <input id="search-val" type="search" placeholder="Search for Tags...">
+          <div class="instructions">
+            <select class="tag-date">
+              <!-- <option value="year">Past 1 Year</option> -->
+              <option value="month" selected>Past 30 Days</option>
+              <option value="two_weeks">Past 14 Days</option>
+              <option value="week">Past 7 Days</option>
+              <option value="today">Today</option>
+            </select>
+            <p id="key">Press Enter to Search</p>
+          </div>
+        </div>
+        <div class="tag-results">
+        </div>
+      </div>
+    <% end %>
+
+    <script>
+      if ($(document).ajaxComplete()) {
+        $('.loader').delay(500).fadeOut(250, function(){
+          $('.main').fadeIn(250);
+          $('.mains').fadeIn(250);
+          $(this).remove();
+        });
+      } else {
+        $('.loader').delay(1000).fadeOut(250, function(){
+          $('.main').fadeIn(250);
+          $('.mains').fadeIn(250);
+          $(this).remove();
+        });
+      }
+    </script>
+  </body>
+</html>

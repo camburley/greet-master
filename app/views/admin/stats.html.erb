@@ -1,0 +1,54 @@
+  <div class="stats">
+    <div class="data-menu">
+      <li>Insights Summary</li>
+
+      <% unless current_user.has_role?(:sub_free) %>
+        <a href="#" id="export_csv">Export to CSV</a>
+      <% end %>
+
+      <select class="post-list">
+        <% unless current_user.has_role?(:sub_free) || current_user.has_role?(:sub_basic) %>
+          <!-- <option value="year" selected>Past 1 Year</option> -->
+          <option value="month">Past 30 Days</option>
+          <option value="two_weeks">Past 14 Days</option>
+        <% end %>
+        <option value="week" selected>Past 7 Days</option>
+        <option value="today">Today</option>
+      </select>
+    </div>
+
+    <div class="echo-data"></div>
+
+    <!-- <div class="data-menu">
+      <li>Insights Summary | Per Post</li>
+    </div>
+    <div class="echo-data-per-post"></div> -->
+  </div>
+
+  <div class="modal-data">
+    <div class="modal-wrapper">
+      <div class="header">
+        <%= image_tag "greylogo.png" %>
+        <i class="fa fa-times modal-close"></i>
+      </div>
+      <div class="modal-content">
+        <div class="intents">
+          <select>
+            <% unless current_user.has_role?(:sub_free) || current_user.has_role?(:sub_basic) %>
+              <!-- <option value="year" selected>Past 1 Year</option> -->
+              <option value="month">Past 30 Days</option>
+              <option value="two_weeks">Past 14 Days</option>
+            <% end %>
+            <option value="week" selected>Past 7 Days</option>
+            <option value="today">Today</option>
+          </select>
+          <h1>Insights Groups</h1>
+          <ul class="list"></ul>
+        </div>
+        <div class="messages">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <%= javascript_include_tag 'extras/sparkline' %>

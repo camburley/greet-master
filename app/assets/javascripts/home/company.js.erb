@@ -1,0 +1,19 @@
+//= require ../extras/facebook
+
+document.addEventListener('DOMContentLoaded', function(){
+  const menu = document.querySelectorAll('.menu li');
+
+  menu.forEach(function(link){
+    link.addEventListener('click', function(){
+      const attr = link.getAttribute('data-target');
+
+      if (attr === 'join') {
+        document.getElementById('create-team').style.display = 'none';
+      } else {
+        document.getElementById('join-team').style.display = 'none';
+      }
+
+      document.getElementById(attr +'-team').style.display = 'grid';
+    });
+  });
+});

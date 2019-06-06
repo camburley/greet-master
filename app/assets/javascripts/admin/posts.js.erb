@@ -1,0 +1,387 @@
+var export_json;
+
+$(function(){
+    let page_id;
+    const pages_widget = $('.page-widget'),
+          pages = pages_widget.find('li'),
+          page_selected = $('.page-selected');
+
+    var first_page = pages.first();
+    page_selected.html(first_page.html())
+                 .click(function(){
+                   pages_widget.toggle();
+                 });
+    
+    // GET PAGE ID (cookie)
+    c_page_id = Cookies.get('pid');
+    page_id = (c_page_id) ? c_page_id : first_page.find('input').val();
+
+    if (c_page_id !== undefined) {
+      const c_page = pages.find('input[value="'+ c_page_id +'"]');
+      page_selected.html(c_page.parent('.page').html());
+    }
+
+    getPosts(page_id);
+
+    pages.click(function(){
+      page_id = $(this).find('input').val();
+
+      page_selected.html($(this).html());
+      pages_widget.hide();
+
+      Cookies.set('pid', page_id, { expires: 7 });
+      getPosts(page_id);
+    });
+
+    $(document).mouseup(function(e) {
+      if (!pages_widget.is(e.target) && pages_widget.has(e.target).length === 0) {
+        pages_widget.hide();
+      }
+    });
+
+    var date = $('.data-menu select');
+
+    // POST FILTER
+    $('.post-filter').on('change', function(){
+    	var val = $(this).val();
+      var post = $('.post');
+      post.find('.option').removeAttr('checked');
+
+      if(val == "all") {
+        post.css('display', 'flex');
+        post.first().find('.echo-setting .option').click()
+      } else if (val == "engagement") {
+        post.css('display', 'flex');
+        post.sort(function(a,b) {
+          var valA = $(a).data('engagement'), valB = $(b).data('engagement')
+          return $.isNumeric(valA) && $.isNumeric(valB) ? valB - valA : valA.toString().localeCompare(valB)
+        }).appendTo('.post-list');
+        $('.post').first().find('.echo-setting .option').click()
+      } else {
+        var filter = $('.post'+'.'+ val);
+        post.hide();
+        filter.css('display', 'flex');
+        filter.first().find('.echo-setting .option').click()
+
+      }
+
+      getData(page_id, date.find(':selected').val());
+    });
+
+    // SEARCH
+    $('#search').keyup(function(){
+      var val = $(this).val().toLowerCase();
+      var title = $('.post .details p');
+      title.closest('.post').hide();
+      title.each(function(){
+        var text = $(this).text().toLowerCase();
+        if(text.indexOf(val) != -1) {
+          $(this).closest('.post').css('display', 'flex');
+        }
+      });
+
+      $(document).click(function(){
+        $('#search').val('');
+      });
+    });
+
+    // EXPORT
+    $('#export_csv').click(function(){
+      var period = date.find(':selected').val();
+      downloadCSV(period);
+    });
+
+    // ON LOAD
+    sortTable();
+    getData(page_id, date.find(':selected').val());
+});
+
+
+// =========
+// FUNCTIONs
+// =========
+
+  function getPosts(page_id) {
+    const postList = $('.post-data .post-list');
+
+    $.getJSON({
+      url: "/api/v1/posts/"+ page_id,
+      dataType: "",
+      statusCode: {
+        200: function(posts){
+          postList.html('');
+
+          $.each(posts, function(index, post){
+            let fromUser = post.from_user ,
+                published = ((post.published) ? "published" : "unpublished"),
+                createdAt = jQuery.timeago(((post.fb_created) ? post.fb_created : post.created_at)),
+                postType = post.post_type,
+                postId = post.id,
+                targetId = post.post_id,
+                message = post.caption || post.message || post.description;
+                platform = post.platform,
+                imageUrl = post.image;
+
+            postList.append('<div class="post '+ ((platform == "instagram") ? "ig" : ((fromUser) ? "up" : "pp")) +' '+ published +' data-post-type="'+ postType +'" data-post-id="'+ postId +'" data-target-id="'+ targetId +'" data-engagement="">'+
+                              '<div class="data">'+
+                                '<div class="image"><a href="'+ post.link +'" target="_blank"><img src="'+ ((postType) === "share" || (postType) === "link" ? "<%= image_url 'link.png' %>" : (imageUrl) ? imageUrl : "<%= image_url 'media.png' %>") +'" onerror="imgError(this);" /></a></div>'+
+                                '<div class="details">'+
+                                  '<p id ="title">'+ ((fromUser && platform == "facebook") ? post.from_user : message) +'</p>'+
+                                  '<p id="published">'+ published +'</p>'+
+                                  '<p id="time">'+ createdAt +'</p>'+
+                                '</div>'+
+                                '<div class="setting">'+
+                                  '<div class="echo-setting">'+
+                                    '<label class="switch">'+
+                                      '<input class="option" type="checkbox" data-post-id="'+ postId +'" '+ ((index) === 0 ? "checked" : "") +' />'+
+                                      '<span class="slider round"></span>'+
+                                    '</label>'+
+                                  '</div>'+
+                                '</div>'+
+                              '</div>'+
+                            '</div>');
+          });
+
+          $('.post').show();
+
+          // GET DATE & PULL DATA
+          $('.data-menu select, .echo-setting .option').on('change', function(){
+            getData(page_id, $('.data-menu select').find(':selected').val());
+          });
+          getData(page_id, $('.data-menu select').find(':selected').val());
+        }
+      }
+    });
+  }
+
+  // GET SELECTED POSTS & DATE
+  function getSelectedIds() {
+    var post_ids = [];
+    var selected_ids = $('.option:checked');
+    var data_ids;
+
+    selected_ids.each(function(){
+      var id = $(this).data('post-id');
+      post_ids.push(id);
+    });
+
+    return post_ids;
+  }
+
+  // GET POST DATA
+  function getData(page_id, period) {
+    var post_ids = getSelectedIds();
+
+    $.getJSON({
+      url: "/api/v1/page/"+ page_id +"?post_ids="+ post_ids,
+      data: { period: period },
+      dataType: "json",
+      success: function(data){
+        var echo_data = $('.echo-data');
+        echo_data.html('');
+
+        export_json = data;
+
+        var date = setDatePeriod(period);
+
+        $.each(data, function(k,v){
+          if(v.hasOwnProperty('total')){
+
+            echo_data.append('<div class="echo" data-key="'+ k +'">'+
+                              '<p class="title">'+ v["title"] +'</p>'+
+                              '<p class="date">'+ date +'</p>'+
+                              '<div class="data">'+
+                                '<span class="count" id="main">'+ (v["total"] || 0) +'</span>'+
+                              '</div>'+
+                            '</div>');
+          }
+        });
+
+        $('.count').each(function () {
+            $(this).prop('Counter',0).animate({
+                Counter: $(this).text()
+            }, {
+                duration: 2500,
+                easing: 'swing',
+                step: function (now) {
+                    $(this).text(Math.ceil(now));
+                }
+            });
+        });
+
+        // OPEN MODAL GET INTENTS
+        $('.echo-data').find('.echo').click(function(){
+          var key = $(this).data('key');
+          getIntentData(page_id, period, key);
+
+          $('.modal-close').click(function(){
+            $('.modal-data').fadeOut();
+          });
+        });
+      }
+    });
+
+    $.getJSON({
+      url: "/api/v1/post/"+ page_id +"?post_ids="+ post_ids,
+      data: { period: period },
+      dataType: "json",
+      success: function(data){
+        var data_table = $('#data-table tbody');
+        data_table.html('');
+
+        $.each(data, function(k,v){
+          var post = $(".post[data-post-id='"+ post_ids[k] +"']");
+          var table = "<td><img src='"+ post.find('.image img').attr('src') +"'></td>";
+
+          $.each(v, function(z,y){
+            table += '<td>'+ y["total"] +'</td>';
+          });
+
+          data_table.append('<tr>'+ table +'</tr>');
+        });
+      }
+    });
+  }
+
+  // GET INTENTS FOR DATA
+  function getIntentData(page_id, period, key) {
+    var post_ids = getSelectedIds();
+    var modal_date = $('.modal-data').find('select');
+    modal_date.val(period);
+    // GET LOCAL DATA
+    $.getJSON({
+      url: "/api/v1/intents/"+ page_id +"/"+ key +"?post_ids="+ post_ids,
+      data: { period: period },
+      dataType: "json",
+      success: function(data, message, code){
+        var list = $('.modal-content .intents').find('.list');
+        list.html('');
+
+        if(code.status === 200){
+          $.each(data, function(k,v){
+            list.append('<li class="intent" data-intent="'+ k +'"><p>'+ k.replace(/_/g, ' ') +'</p><span>'+ v +'</span></li>');
+          });
+
+          var first_intent = list.find('li:first-child');
+          first_intent.addClass('active');
+          getMessageData(page_id, period, key, first_intent.data('intent'));
+
+          $('.intent').click(function(e){
+            e.stopImmediatePropagation();
+
+            $('.intent').removeClass('active');
+            $(this).addClass('active');
+            getMessageData(page_id, period, key, $(this).data('intent'));
+          });
+        } else {
+          $('.messages').html('<h1 class="alert">No Content!</h1>');
+        }
+
+        $('.modal-data').fadeIn();
+      }
+    });
+
+    modal_date.change(function(e){
+      e.stopImmediatePropagation();
+
+      var period = $(this).find(':selected').val();
+      getIntentData(page_id, period, key);
+    });
+
+    return false;
+  };
+
+  // GET MESSAGES FOR INTENT
+  function getMessageData(page_id, period, key, intent) {
+    var post_ids = getSelectedIds();
+
+    $.getJSON({
+      url: "/api/v1/messages/"+ page_id +"/"+ key +"/"+ intent +"?post_ids="+ post_ids,
+      data: { period: period},
+      dataType: "json",
+      success: function(data){
+        var messages = $('.messages');
+        messages.html('');
+
+        $.each(data, function(k, v){
+          let link = v["platform"] == "facebook" ? "https://facebook.com/"+v["comment_id"] : v["link"];
+          
+          if(v["team_responded"] === true){
+            messages.append('<div class="message">'+
+                              '<div class="data">'+
+                                '<div class="question">'+
+                                  '<img src="https://png.icons8.com/color/48/9D7CC1/comments.png">'+
+                                  '<p>'+ v["message"] +'</p>'+
+                                '</div>'+
+                                '<div class="answer">'+
+                                  '<p>'+ v["echo_message"] +'</p>'+
+                                '</div>'+
+                              '</div>'+
+                              '<div class="extras">'+
+                                '<time class="timeago" datetime="'+ v["created_at"] +'"></time>'+
+                                '<a href="'+ link +'" target="_blank"><i class="fas fa-external-link-alt"></i></a>'+
+                              '</div>'+
+                            '</div>'
+                            );
+          } else {
+            messages.append('<div class="message">'+
+                              '<div class="data">'+
+                                '<div class="question">'+
+                                  '<img src="https://png.icons8.com/color/48/9D7CC1/comments.png">'+
+                                  '<p>'+ v["message"] +'</p>'+
+                                '</div>'+
+                              '</div>'+
+                              '<div class="extras">'+
+                                '<time class="timeago" datetime="'+ v["created_at"] +'"></time>'+
+                                '<a href="'+ link +'" target="_blank"><i class="fas fa-external-link-alt"></i></a>'+
+                              '</div>'+
+                            '</div>'
+                            );
+          }
+
+        });
+
+        $("time.timeago").timeago();
+      }
+    });
+  }
+
+  // SORT TABLE
+  function sortTable() {
+    $('th').click(function(){
+      $('th').removeClass('sort');
+      $(this).addClass('sort');
+
+      var table = $(this).parents('table').eq(0)
+      var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+      this.asc = !this.asc
+      if (!this.asc){rows = rows.reverse()}
+      for (var i = 0; i < rows.length; i++){table.append(rows[i])}
+    })
+  }
+  function comparer(index) {
+      return function(a, b) {
+          var valA = getCellValue(a, index), valB = getCellValue(b, index)
+          return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+      }
+  }
+  function getCellValue(row, index){ return $(row).children('td').eq(index).text() }
+
+  // SET DATE PERIOD
+  function setDatePeriod(period) {
+    var set_date;
+
+    if(period == "year") {
+      set_date = "<%= 1.year.ago.to_date.to_s(:short) + " - " + Date.today.to_s(:short) %>";
+    } else if(period == "month") {
+      set_date = "<%= 1.month.ago.to_date.to_s(:short) + " - " + Date.today.to_s(:short) %>";
+    } else if(period == "two_weeks") {
+      set_date = "<%= 2.weeks.ago.to_date.to_s(:short) + " - " + Date.today.to_s(:short) %>";
+    } else if(period == "week") {
+      set_date = "<%= 1.week.ago.to_date.to_s(:short) + " - " + Date.today.to_s(:short) %>";
+    } else if (period == "today") {
+      set_date = "<%= Date.today.to_s(:short) %>";
+    }
+
+    return set_date;
+  }

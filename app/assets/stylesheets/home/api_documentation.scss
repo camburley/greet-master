@@ -1,0 +1,106 @@
+ //= require ../extras/atom-one-dark
+
+$white: #fff;
+$black: #000;
+$dark-gray: #191D1F;
+$med-gray: #1F2224;
+$light-gray: #2E3336;
+$blue: #1B77D1;
+$light-blue: #F3F7F9;
+
+body { font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; color: $med-gray;}
+
+.wrapper { min-height: 100%; font-size: 12px;
+  .content, .navigation, .method-menu { transition: all 0.3s; }
+  .navigation { width: 200px; height: 100%; position: fixed; left: 0; top: 0; background-color: $light-gray; color: $white;
+    div { padding: 10px 5px; box-sizing: border-box; }
+    .mobile-menu { display: none; }
+    .logo { text-align: center; margin: 20px 0;
+      img { width: 80px; }
+    }
+    .menu { padding: 0;
+      li { padding: 5px 10px;
+        &.active { background-color: $blue; }
+      }
+      a { color: $white; text-decoration: none; }
+    }
+    .info-message { margin-top: 25px; text-align: center; border-top: 1px dashed #666;
+      a { color: $blue; text-decoration: none; }
+    }
+  }
+  .content { width: calc(100% - 200px); margin-left: 200px;
+    .method-menu { position: fixed; width: calc(50% - 140px); top: 0; right: 0; background-color: $black; padding: 5px 20px; margin: 0;
+      li { display: inline; color: $white; padding: 0 10px; cursor: pointer;
+        &.active, &:hover { font-weight: 600; }
+      }
+    }
+    .method-wrapper {
+      .info-text, .warning-text { padding: 10px; }
+      .info-text:before, .warning-text:before { font-family: FontAwesome; font-style: normal; margin-right: 10px; }
+      .info-text { background-color: #2ecc71;
+        &:before { content: "\f05a"; }
+      }
+      .warning-text { background-color: #e74c3c;
+        &:before { content: "\f06a"; }
+      }
+
+      .method { display: grid; grid-template-columns: 1fr 1fr; min-height: 500px; background-color: $light-gray;
+        &:last-child .information { padding-bottom: 150px;}
+        .information { padding-top: 50px; background-color: $light-blue;
+          h1 { margin: 0; padding: 10px 15px; font-size: 28px; line-height: 44px; font-weight: 400; border-bottom: 1px solid #ccc; border-top: 1px solid #ccc; background-color: #fff; }
+          .text { padding: 10px 15px;
+            h4 { margin-top: 30px; }
+            quote { font-family: monospace; background-color: #ddd; color: #000; }
+            table { width: 100%; text-align: left; border-spacing: 0;
+              tr { background-color: $white; height: 40px; }
+              td, th { padding: 5px; }
+              thead {
+                #head1, #head2 { width: 100px; }
+              }
+              tbody {
+                tr:nth-child(even) { background-color: #f5f5f5; }
+              }
+            }
+          }
+        }
+        .code { color: $white; padding-top: 114px; overflow: hidden;
+          p#message { width: 100%; background-color: $dark-gray; padding: 10px; margin: 0; }
+          pre { display: flex; margin: 0; padding: 0 20px; background-color: $med-gray;
+            code { background-color: transparent; padding: 0; max-height: 500px; min-width: 100%;
+              &::-webkit-scrollbar { width: 2px; height: 0; }
+              &:hover { background-color: transparent !important; }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width : 979px) {
+  .wrapper {
+    .navigation { width: 0px;
+      .logo, .menu, .info-message { display: none; }
+      .mobile-menu { display: block; color: $dark-gray; margin: 10px; padding: 10px; position: fixed; display: block; background: $white; border-radius: 50%; }
+
+      &.mobile { width: 200px;
+        & > .logo, .menu, .info-message { display: block; }
+      }
+    }
+    .content { width: 100%; margin-left: 0;
+      .method-wrapper {
+        .method-menu { width: calc(50% - 40px)}
+      }
+    }
+  }
+}
+
+@media only screen and (max-width : 767px) {
+  .wrapper .content .method-wrapper {
+    .method { display: block; min-height: 0;
+      .information { padding-bottom: 25px; }
+      .code { padding-top: 0; }
+    }
+    .method-menu { display: none; }
+  }
+}

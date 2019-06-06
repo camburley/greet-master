@@ -1,0 +1,39 @@
+@import "extras/variables";
+@import "extras/elements";
+
+p { margin: none;}
+
+.main.settings, .main.settings_pages, .main.settings_team {
+  .content-settings { padding: 20px 0; display: none; }
+  i.fa-refresh {float: right; position: relative; bottom: 28px; font-size: 18px; color: #555; right: 20px; }
+
+  .row { border: $border-l-gray; margin: 15px 0;
+    &.fade { opacity: 0.5; 
+      .manage-button { cursor: default; transition: none; 
+        &:hover { background-color: initial; color: #8766AD; }
+      }
+    }
+    .team-info { float: right; font-size: 13px; }
+  }
+
+  .set {
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    p { font-size: 15px; }
+
+    .manage-button { width: 150px; margin: 10px 0 10px auto; color: #8766AD; border: 1px solid #8766AD; border-radius: 5px; cursor: pointer; transition: background-color 0.5s, color 0.5s; text-align: center; padding: 5px;
+      &:hover { background-color: #8766AD; color: #fff }
+    }
+    p#code { text-align: center; background-color: #F6F8FB; margin: 10px; padding: 5px; border-radius: 5px; }
+
+    .set-slider { padding: 13px;
+      .switch { float: right; }
+    }
+  }
+
+  .company .set p { margin: 10px 0;
+    &#info { font-size: 13px; }
+  }
+}

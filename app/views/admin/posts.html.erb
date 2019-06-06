@@ -1,0 +1,97 @@
+<div class="content">
+  <section class="post-data">
+    <div class="post-menu flex">
+      <input class="expand" type="search" id="search">
+      <select class="post-filter">
+        <option value="all" selected="true">All</option>
+        <option value="pp">Facebook</option>
+        <option value="ig">Instagram</option>
+        <option value="up">User</option>
+        <option value="published">Published</option>
+        <option value="unpublished">Unpublished</option>
+      </select>
+    </div>
+
+    <div class="post-list"></div>
+  </section>
+
+  <section class="tabs">
+    <div class="selector">
+      <button class="tab active" id="stats">Metrics</button>
+    </div>
+
+    <div class="stats">
+      <div class="data-menu">
+        <li>Summary</li>
+
+        <% unless current_user.has_role?(:sub_free) %>
+          <a href="#" id="export_csv">Export to CSV</a>
+        <% end %>
+
+        <select class="post-list">
+          <% unless current_user.has_role?(:sub_free) || current_user.has_role?(:sub_basic) %>
+            <!-- <option value="year" selected>Past 1 Year</option> -->
+            <option value="month">Past 30 Days</option>
+            <option value="two_weeks">Past 14 Days</option>
+          <% end %>
+          <option value="week">Past 7 Days</option>
+          <option value="today">Today</option>
+        </select>
+      </div>
+
+      <div class="echo-data"></div>
+    </div>
+
+    <div class="stats-table">
+      <div class="data-menu">
+        <li>A/B Test</li>
+      </div>
+
+      <table id="data-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Conversations</th>
+            <!-- <th>Answered</th> -->
+            <!-- <th>Open</th> -->
+            <!-- <th>Mentions</th> -->
+            <!-- <th>Friend Tags</th> -->
+            <!-- <th>Long Messages</th> -->
+            <th>Love</th>
+            <th>Toxic</th>
+            <!-- <th>Spam</th> -->
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="modal-data">
+    <div class="modal-wrapper">
+      <div class="header">
+        <%= image_tag "greylogo.png" %>
+        <i class="fas fa-times modal-close"></i>
+      </div>
+      <div class="modal-content">
+        <div class="intents">
+          <select>
+            <% unless current_user.has_role?(:sub_free) || current_user.has_role?(:sub_basic) %>
+              <!-- <option value="year" selected>Past 1 Year</option> -->
+              <option value="month">Past 30 Days</option>
+              <option value="two_weeks">Past 14 Days</option>
+            <% end %>
+            <option value="week">Past 7 Days</option>
+            <option value="today">Today</option>
+          </select>
+          <h1>Insights Groups</h1>
+          <ul class="list"></ul>
+        </div>
+        <div class="messages">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= javascript_include_tag 'extras/jquery.timeago' %>

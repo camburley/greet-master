@@ -1,0 +1,46 @@
+@import "extras/variables";
+
+// FLOAT
+.left { float: left; }
+.right { float: right; }
+.flex { display: flex; }
+
+// BOXING
+div, section, nav { box-sizing: border-box; }
+
+// TEXT
+h1 { margin: 10px 20px; font-weight: 100; font-size: 18px; }
+p.label { color: #ccc; margin: 0; padding: 0 20px 20px; font-size: 10px; border-bottom: 1px solid #f3f2f2;}
+a { text-decoration: none; }
+span.inline { vertical-align: top; display: inline-block; }
+select { -webkit-appearance: none; }
+
+// SWITCH
+.switch { position: relative; display: inline-block; width: 32px; height: 18px;
+
+  input { display:none;
+    &:checked + .slider { background-color: #9d7cc1; }
+    &:focus + .slider { box-shadow: 0 0 1px #2196F3; }
+    &:checked + .slider:before { -webkit-transform: translateX(14px); -ms-transform: translateX(14px); transform: translateX(14px); }
+  }
+
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; -webkit-transition: .4s; transition: .4s;
+    &:before { position: absolute; content: ""; height: 16px; width: 16px; left: 1px; bottom: 1px; background-color: white; -webkit-transition: .4s; transition: .4s; }
+
+    &.round { border-radius: 34px;
+      &:before { border-radius: 50%; }
+    }
+  }
+}
+
+// SEARCH BAR
+input.expand { outline: none;
+    &[type=search] { -webkit-appearance: textfield; -webkit-box-sizing: content-box; font-family: inherit; font-size: 100%; background: url(https://static.tumblr.com/ftv85bp/MIXmud4tx/search-icon.png) no-repeat; background-size: 17px; background-position: 5px 3px; width: 20px; color: transparent; cursor: pointer; border-radius: 15px; border: none; color: #555;
+                     -webkit-transition: all .5s; -moz-transition: all .5s; transition: all .5s;
+      &:focus { width: 205px; border: 1px solid #9d7cc1; padding: 0 10px 0 25px; cursor: auto; -webkit-box-shadow: 0 0 5px #9d7cc1; -moz-box-shadow: 0 0 5px #9d7cc1; box-shadow: 0 0 5px #9d7cc1; }
+    }
+    &::-webkit-search-decoration, &::-webkit-search-cancel-button { display: none; }
+}
+
+// SELECT INPUT
+select { float: right; border: none; background: transparent; color: $m-purple; font-size: 10px; outline: none; }

@@ -1,0 +1,170 @@
+@import "extras/variables";
+@import "extras/data_modal";
+@import "extras/elements";
+
+.main.campaign { max-width: 100%; margin: auto;
+  .content { display: grid; grid-template-columns: 300px 1fr; }
+  .alert { text-align: center; }
+
+  i { margin-right: 5px;
+    &.fa-caret-up { color: #27ae60; }
+    &.fa-caret-down { color: #e74c3c; }
+    &.fa-circle { color: #f5f5f5; }
+  }
+  
+  /* .tabs { display: none; } */
+  
+  .campaign-data, .tabs { height: calc(100vh - 120px); overflow: scroll; }
+  .campaign-data { border-right: 1px solid #e7ebf3;
+    &::-webkit-scrollbar { display: none; }
+  }
+  
+  .campaign-menu { height: 50px; padding: 7px 20px; border-bottom: 1px solid #e7ebf3; overflow: hidden; white-space: nowrap;
+    input.expand { margin: 7px 10px; height: 20px; }
+    p { display: inline-block; margin: 7px 0 0 15px; font-size: 18px; font-weight: 600; color: #555;
+      span { font-size: 11px; font-weight: 100; vertical-align: middle; }
+    }
+    select { display: inline-block; margin-top: 8px; width: 60px; }
+  }
+  
+  .campaign { height: 70px; padding: 5px 15px; border-bottom: 1px solid #e7ebf3; cursor: pointer; transition: background-color 0.5s;
+    &:hover { background-color: #f5f5f5; }
+    .data { display: grid; grid-template-columns: 215px 50px;
+      .image { overflow: hidden; text-align: center;
+        img { margin: 10px auto; height: 40px; border-radius: 50%; }
+      }
+    }
+    .details { padding: 14px 10px;
+      p { margin: 0; white-space: nowrap; text-overflow: ellipsis;
+        &#title { font-weight: 600; font-size: 13px; color: #555; overflow: hidden; }
+        &#time, &#published { font-size: 10px; }
+      }
+    }
+    .setting {
+      .echo-setting { text-align: center; }
+      .switch { margin: 21px 0; }
+    }
+  }
+  
+  .tabs { background-color: #F4F8F9; 
+    .tab { display: none; 
+      &.active { display: block; }
+    }
+  }
+  
+  .selector { padding: 10px 20px 0; background-color: #fff; border-bottom: 1px solid #e7ebf3;
+    button { border: none; background: transparent; margin: 0 5px; padding: 10px 10px 15px; color: #ccc; cursor: pointer; transition: color 0.5s; outline: none; border-radius: 0;
+      &.wizard { color: #8360aa; float: right; }
+      &.active { color: #8360aa; border-bottom: 1px solid #8360aa; }
+      &:hover { border-bottom: 1px solid #8360aa; }
+    }
+  }
+  
+  .stats, .tags { display: none; }
+  .compare-stats .echo-data { overflow: hidden; }
+  .stats { margin: 15px; border: 1px solid #f5f5f5; background: #fff;
+    .data-menu { padding: 15px 10px;
+      li { height: 35px; list-style: none; display: inline-block; font-size: 14px; margin-right: 20px; font-weight: 600;
+        img { height: 100%; border-radius: 50%; }
+        span { display: inline-block; vertical-align: top; margin: 9px; }
+      }
+      select { border: none; background: transparent; color: #555; font-size: 10px; margin-top: 10px; }
+    }
+    .echo-data { padding: 0; border: 1px solid #f5f5f5; overflow-y: scroll; height: 135px; white-space: nowrap;
+      &::-webkit-scrollbar { display: none; }
+      .echo { padding: 10px; border-right: 1px solid #f5f5f5; height: 100%; display: inline-block; width: 180px; 
+        &:last-child { border-right: none; }
+        // &:hover { background-color: #fefefe; }
+        .title { font-size: 11px; font-weight: bold; text-transform: capitalize; color: #555; margin: 5px 0; }
+        .data { padding: 15px 0; font-size: 26px; }
+      }
+    }
+  }
+  
+  .echo-data { border-left: none; }
+  
+  .tags { margin: 15px; border: 1px solid #f5f5f5;
+    #header { background-color: #fff; margin: 0; height: 50px; padding: 16px 10px; box-sizing: border-box; font-size: 16px; font-weight: 600; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr;
+      .brand { border-right: 1px solid #f5f5f5; }
+
+      table { width: 100%; border-collapse: collapse; padding: 15px;
+        thead { background-color: #f3f3f3; 
+          td#image { white-space: nowrap;
+            img { height: 24px; border-radius: 50%; }
+          }
+        }
+        tbody { background-color: #fff; }
+      }
+      td { padding: 0 10px; }
+      table tbody {
+        tr { border-bottom: 1px solid #f5f5f5; }
+        td {
+          &#con, &#poscon { font-size: 14px; font-weight: 600; }
+        }
+      }
+      tr { height: 50px;
+        span#comp { font-size: 12px; font-weight: 100; margin-left: 10px; }
+      }
+    }
+  }
+
+  .tab.posts {
+    .page-compare { height: calc(100vh - 225px); overflow: scroll; margin: 25px; background-color: #fff;
+      .page { min-width: 350px; max-width: 350px; height: calc(100vh - 226px); display: table-cell; vertical-align: top; border-left: 1px solid #f4f8f9;
+        &:first-child { border: none; }
+
+        .page-info, .post-list { padding: 10px; }
+        .page-info { border-bottom: 1px solid #f4f8f9;
+          img, p { display: inline-block; }
+          img { margin-right: 15px; border-radius: 50%;}
+          p { margin: 20px 0 0; vertical-align: top; font-size: 14px; font-weight: 600; }
+        }
+        .post-list {
+          p#no-post { text-align: center; font-size: 16px; margin-top: 100px; }
+          .post { display: grid; grid-template-columns: 50px 2fr 1fr; height: 50px;
+            img {}
+            p#title { margin: 0; }
+            .setting {
+              
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .modal { display: none; position: absolute; width: 100%; height: 100%; bottom: 0; background-color: rgba(0,0,0,0.8);
+    .wizard { position: absolute; width: 500px; height: 500px; top: 0; bottom: 0; left: 0; right: 0; margin: auto; background-color: #fff; border-radius: 5px;
+      .heading { padding: 15px; border-bottom: 1px solid #e7ebf3;
+        h2 { margin: 0; }
+      }
+      .form { padding-top: 10px;
+        input, button { outline: none; }
+        label { font-size: 11px; font-weight: 600; } 
+
+        #name, #date, #compare, #tags { padding: 5px 15px; 
+          label, input { display: block; }
+          input { width: 100%; margin-top: 4px; padding: 5px; border-radius: 5px; border: 1px solid #cbccbc; box-sizing: border-box; }
+        }
+
+        #date { display: grid; grid-template-columns: 1fr 1fr;
+          #set { padding-right: 40px; }
+        }
+
+        #compare {
+          select { float: initial; border: initial; color: initial; width: 100%;
+            &[multiple]:focus option:checked { background: #8360aa; background-repeat: no-repeat; background-size: 35px; background-position: 10px 5px; }
+
+            option { background-repeat: no-repeat; background-size: 30px; background-position: 10px 8px; padding: 17px 55px; }
+          }
+        }
+
+        #submit { position: absolute; bottom: 0; right: 0; height: 60px; width: 100%; background-color: #f2f2f2f2; padding: 0 20px; text-align: right;
+          button { width: 80px; margin: 12px 5px; color: #888; font-weight: 600; border: 1px solid #dedede; border-radius: 5px; cursor: pointer; text-align: center; padding: 10px 5px; }
+          button#create { background-color: #5fcb98; border-color: #5fcb98; color: #fff; }
+        }
+      }
+    }
+  }
+}

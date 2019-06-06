@@ -1,0 +1,43 @@
+ //= require ./pages
+
+ @font-face {
+     font-family: 'pages-icon';
+     src: asset-url('Pages-icon.eot?-u69vo5');
+     src: asset-url('Pages-icon.eot?#iefix-u69vo5') format('embedded-opentype'),
+     	asset-url('Pages-icon.woff?-u69vo5') format('woff'),
+     	asset-url('Pages-icon.ttf?-u69vo5') format('svg'),
+     	asset-url('Pages-icon.svg?-u69vo5#Pages-icon') format('opentype');
+     font-weight: normal;
+     font-style: normal;
+ }
+
+ .fb-login-button { display: block; margin: auto; padding: 0 10px; border-radius: 5px; border: none; background: #3C5A96; color: #fff; cursor: pointer; outline: none;
+    width: 285px; transition: width 0.5s;
+
+   p { display: inline-block; vertical-align: super; font-size: 16px; padding: 0 10px; }
+   i { font-size: 32px; display: inline-block; padding: 9px; }
+
+   &.load {
+     width: 325px;
+   }
+ }
+
+.loader{
+  height: 50px;
+  width: 0px;
+  padding: 5px 0;
+  margin: 0;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  transition: width 0.5s;
+
+  &.load {
+    width: 50px;
+  }
+}
+
+svg path,
+svg rect{
+  fill: #3498db;
+}

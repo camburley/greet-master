@@ -1,0 +1,120 @@
+<div class="content">
+
+  <section class="campaign-data">
+    <div class="campaign-menu">
+      <input class="expand" type="search" id="search">
+      <p>Campaigns <span id="count"></span></p>
+    </div>
+    <div class="campaign-list"></div>
+  </section>
+
+  <section class="tabs">
+    <div class="selector">
+      <button class="btntab active" id="metrics">Metrics</button>
+      <button class="btntab" id="posts">Posts</button>
+      <button class="btntab wizard" onclick="showWizard();"><i class="fas fa-plus"></i> Add Campaign</button>
+    </div>
+
+    <div class="tab metrics active">
+      <div class="stats page-stats">
+        <div class="data-menu">
+          <li><span></span></li>
+        </div>
+        <div class="echo-data">
+        </div>
+      </div>
+      <div class="stats compare-stats">
+        <div class="data-menu">
+          <li><span>Compared (0)</span></li>
+        </div>
+        <div class="echo-data">
+        </div>
+      </div>
+      <div class="tags">
+        <p id="header">Tags</p>
+        <div class="compare">
+          <div class="brand">
+            <div class="table">
+              <table>
+                  <thead>
+                    <tr>
+                      <td id="image"></td>
+                      <td>Conversations</td>
+                      <td>Positive Conversations</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- DATA 1 -->
+                  </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="campaigns">
+            <div class="table">
+              <table>
+                <thead>
+                  <tr>
+                    <td id="image"></td>
+                    <td>Conversations</td>
+                    <td>Positive Conversations</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- DATA 2 -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab posts">
+      <div class="page-compare">
+      <%# PAGE & POST LIST %>
+      </div>
+    </div>
+  </section>
+
+  <div class="section modal">
+    <div class="wizard">
+      <div class="heading">
+        <h2>Create new campaign</h2>
+      </div>
+      <div class="form">
+        <%= form_tag(admin_campaign_path) do %>
+          <input type="hidden" id="page-id" name="campaign[page_id]" value="">
+          <div id="name">
+            <label>Name</label>
+            <input name="campaign[name]" type="text" placeholder="Campaign Name" required>
+          </div>
+          <div id="compare">
+            <select name="campaign[compare][]" multiple required>
+              <!-- PAGES -->
+            </select>
+          </div>
+          <div id="tags">
+            <label>Tags</label>
+            <input name="campaign[tags]" type="text" placeholder="Tags (Separate by comma)" required>
+          </div>
+          <div id="date">
+              <div id="set">
+                  <label>Start Date</label>
+                  <input name="campaign[start_date]" type="date" required>
+              </div>
+              <div id="set">
+                  <label>End Date</label>
+                  <input name="campaign[end_date]" type="date" required>
+              </div>
+          </div>
+
+          <div id="submit">
+            <button onclick="showWizard();">Cancel</button>
+            <button id="create" type="submit">Create</button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+</div>

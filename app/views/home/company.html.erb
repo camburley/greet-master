@@ -1,0 +1,68 @@
+<div class="login-holder" id="create-team">
+  <div class="menu">
+    <ul>
+      <li data-target="join">
+        <i class="fas fa-puzzle-piece" id="puzzle"></i>
+        <p>Join</p>
+      </li>
+      <li data-target="create" class="active">
+        <i class="fas fa-plus"></i>
+        <p>Create</p>
+      </li>
+    </ul>
+  </div>
+  <div class="wlc-box">
+    <div class="wrapper">
+      <div class="logo">
+        <%= image_tag "logo-2-w.png" %>
+      </div>
+      <div class="text">
+        <h1>WELCOME <span id="lower">TO GREET</span></h1>
+        <p>Create new Company</p>
+      </div>
+    </div>
+  </div>
+  <div class="form">
+    <%= form_tag('/create_company', method: :post) do %>
+      <h2>Company:</h2>
+      <input name="company[name]" type="text" placeholder="Name" autofocus autocomplete="organization" required>
+      <input name="company[email]" type="email" placeholder="Email" autocomplete="email" required>
+      <input name="company[phone]" type="tel" placeholder="Phone" autocomplete="tel" required>
+      <input name="company[logo_url]" type="url" placeholder="Logo URL (optional)">
+      <input type="submit" value="Create">
+    <% end %>
+  </div>
+</div>
+
+<div class="login-holder" id="join-team" style="display:none;">
+  <div class="menu">
+    <ul>
+      <li data-target="join" class="active">
+        <i class="fas fa-puzzle-piece" id="puzzle"></i>
+        <p>Join</p>
+      </li>
+      <li data-target="create">
+        <i class="fas fa-plus"></i>
+        <p>Create</p>
+      </li>
+    </ul>
+  </div>
+  <div class="wlc-box">
+    <div class="wrapper">
+      <div class="logo">
+        <%= image_tag "logo-2-w.png" %>
+      </div>
+      <div class="text">
+        <h1>WELCOME <span id="lower">TO GREET</span></h1>
+        <p>Join your Company</p>
+      </div>
+    </div>
+  </div>
+  <div class="form">
+    <%= form_tag('/create_company', method: :post) do %>
+      <h2>Company:</h2>
+      <input name="company[code]" type="text" placeholder="Code" autofocus autocomplete="none" required>
+      <input type="submit" value="Join">
+    <% end %>
+  </div>
+</div>

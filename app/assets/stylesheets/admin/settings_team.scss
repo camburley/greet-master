@@ -1,0 +1,21 @@
+@import "extras/settings";
+
+p { margin: none;}
+
+.main.settings_team {
+  .row {
+    .team {
+      .set { padding: 5px 20px;
+        .info {
+          img { height: 35px; }
+          span { display: inline-block; vertical-align: top; margin-top: 11px; padding-left: 10px; }
+        }
+
+        .manage { text-align: right;
+          .joined { font-size: 13px; margin: 10px 0; color: #aaa;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+.modal-data { display: none; position: fixed; height: 100%; width: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.5);
+  .modal-wrapper { width: 80%; height: calc(100% - 100px); margin: 50px 10%; background: #fff;
+    .header { padding: 10px 10px;
+      img { width: 35px; }
+      i { float: right; cursor: pointer; }
+    }
+    .modal-content { display: grid; grid-template-columns: 250px auto; height: calc(100% - 52px);
+      .intents, .messages { overflow: scroll; padding: 25px 0; }
+      .intents { background-color: #FAFAFA;
+        select { float: none; margin: 5px 12px; }
+        ul { padding: 20px 0; margin: 0;
+          li { list-style-type: none; font-size: 12px; padding: 10px 30px; border-bottom: 1px solid #eef1f6; cursor: pointer; transition: background-color 0.5s;
+            &:hover, &.active { background-color: #f7f8fb; }
+            &.active { border-left: 4px solid #8360aa; }
+
+            p, span { display: inline; }
+            p { text-transform: capitalize; }
+            span { float: right; color: #a5a5a5; font-size: 10; }
+          }
+        }
+      }
+      .messages {
+        .message { display: grid; grid-template-columns: auto 100px; border-bottom: 1px solid #eef1f6; padding: 10px; min-height: 65px; }
+        .question, .answer { width: 75%; padding: 5px; border-radius: 5px; font-size: 11px;
+          img { width: 30px; }
+          p { margin: 1px 0 0; }
+        }
+        .question { display: grid; grid-template-columns: 40px auto;
+          i { color: #9c7bc1; font-size: 24px; margin: 12px 0; }
+        }
+        .answer { background-color: #9c7bc1; color: #fff; margin-left: auto; }
+        .extras { padding: 5px 10px;
+          time, i { display: block; }
+          time.timeago { font-size: 11px; color: #c5c5c5; }
+          a { color: #c5c5c5; font-size: 16px; transition: color 1s;
+            i { margin-top: 10px; }
+            &:hover { color: #69778c; }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,165 @@
+<div class="content-settings">
+  <div class="row">
+		<h1>Company</h1>
+		<p class="label">INFORMATIONS ABOUT YOUR COMPANY</p>
+    <div class="company">
+      <div class="set">
+        <p>Name:</p>
+        <p id="info"><%= @current_company.name %></p>
+      </div>
+      <div class="set">
+        <p>Email:</p>
+        <p id="info"><%= @current_company.email %></p>
+      </div>
+      <div class="set">
+        <p>Phone:</p>
+        <p id="info"><%= @current_company.phone %></p>
+      </div>
+    </div>
+	</div>
+
+	<div class="row <%= current_user.has_role?(:sub_free) ? "fade" : "" %>">
+		<h1>Team<span class="team-info"><%= Array(@team).size %> Member(s)</span></h1>
+		<p class="label">MANAGE AND INVITE YOUR TEAM MEMBERS</p>
+		<div class="team">
+			<div class="set">
+				<p>Members:</p>
+				<a href="<%= current_user.has_role?(:sub_free) ? "#" : "/admin/settings/team" %>" class="manage-button">Manage</a>
+			</div>
+			<div class="set">
+				<p>Invitation Link:</p>
+				<p id="code"><%= current_user.has_role?(:sub_free) ? "" : @current_company.code || nil %></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="row <%= current_user.has_role?(:sub_free) ? "fade" : "" %>">
+		<h1>Pages<span class="team-info"><%= Array(@pages).size %> Page(s)</span></h1>
+		<p class="label">MANAGE YOUR PAGES AND INFLUENCERS</p>
+		<div class="pages">
+			<div class="set">
+				<p>Pages:</p>
+				<a href="<%= current_user.has_role?(:sub_free) ? "#" : "/admin/settings/pages" %>" class="manage-button">Manage</a>
+			</div>
+			<!-- <div class="set">
+				<p>Detox:</p>
+				<div class="set-slider">
+					<label class="switch">
+						<input type="checkbox" onclick="">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div>
+			<div class="set">
+				<p>Advertise Block:</p>
+				<div class="set-slider">
+					<label class="switch">
+						<input type="checkbox" onclick="">
+						<span class="slider round"></span>
+					</label>
+				</div>
+			</div> -->
+		</div>
+	</div>
+
+	<% if current_user.has_role?(:super_admin) %>
+		<div class="row">
+				<div class="echo">
+					<h1>Echo:</h1>
+					<p class="label">TURN ON/OFF ECHO FEATURES</p>
+
+					<div class="echo-setting">
+						<span class="label">Page: </span>
+						<label class="switch">
+							<input type="checkbox" onclick="sendData('echo')" <%= current_page.echo ? "checked" : false %> >
+							<span class="slider round"></span>
+						</label>
+					</div>
+					<div class="echo-setting">
+						<span class="label">New Post by Default: </span>
+						<label class="switch">
+							<input type="checkbox" onclick="sendData('post_echo')" <%= current_page.post_echo ? "checked" : false %> >
+							<span class="slider round"></span>
+						</label>
+					</div>
+					<div class="echo-setting">
+						<span class="label">Detox: </span>
+						<label class="switch">
+							<input type="checkbox" onclick="sendData('toxic_message')" <%= current_page.toxic_message ? "checked" : false %> >
+							<span class="slider round"></span>
+						</label>
+					</div>
+					<div class="echo-setting">
+						<span class="label">Advertise Block: </span>
+						<label class="switch">
+							<input type="checkbox" onclick="sendData('domain_block')" <%= current_page.domain_block ? "checked" : false %> >
+							<span class="slider round"></span>
+						</label>
+					</div>
+				</div>
+		</div>
+
+		<% if current_user.has_role? :super_admin %>
+			<div class="row">
+				<div class="thanks-message">
+					<h1>Thanks Messages:</h1>
+					<p class="label">DEFAULT THANKS RESPONSES</p>
+					<%= form_tag(admin_settings_path, method: :put) do %>
+						<div class="messages">
+							<% @echo_response.each do |msg| %>
+								<div class="text">
+									<%= text_field_tag 'echo_response[]', msg %><i class="fa fa-trash" aria-hidden="true"></i>
+								</div>
+							<% end %>
+						</div>
+						<%= button_tag raw('<i class="fa fa-pencil" aria-hidden="true"></i> Save'), type: 'submit', id: 'save' %>
+						<%= button_tag raw('<i class="fa fa-plus" aria-hidden="true"></i> Add'), type: 'button', id: 'add' %>
+					<% end %>
+				</div>
+			</div>
+		<% end %>
+	<% end %>
+</div>
+
+<div class="loader">
+  <%= image_tag "loading_dots.gif" %>
+</div>
+
+<script>
+	(function($){
+		var content = $('.content-settings');
+		var loader = $('.loader');
+
+		loader.delay(500).fadeOut(500, function(){
+			content.fadeIn(500);
+		});
+	})(jQuery);
+  //
+	// function sendData(id) {
+	//   $.ajax({
+	//      type: "PUT",
+	//      url: "/admin/settings",
+	//      data: { echo: id }
+	//   });
+	// }
+  //
+	// $('button#add').click(function(){
+	// 	$('.messages').append('<div class="text"><input type="text" name="echo_response[]" id="echo_response_" placeholder="❤️ 🙌 Thx for sharing with friends.. Love ya!"><i class="fa fa-trash" aria-hidden="true"></div>');
+	// 	trash();
+	// });
+  //
+	// function trash(){
+	// 	$('.text').click(function(){
+	// 		$('.text').find('i').hide();
+	// 		$(this).find('i').show(100, function(){
+	// 			$(this).click(function(){
+	// 				$(this).closest('.text').hide(100, function(){
+	// 					$(this).remove();
+	// 				});
+	// 			});
+	// 		});
+	// 		return false;
+	// 	});
+	// }
+	// trash();
+</script>
